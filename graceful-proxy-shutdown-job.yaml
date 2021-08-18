@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: proxy-shutdown
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      containers:
+        - name: wait-and-shutdown
+          image: curlimages/curl
+          command:
+            - "/bin/sh"
+            - "-c"
+            - "sleep 30 && curl -X POST http://localhost:4191/shutdown"
+      restartPolicy: Never

@@ -10,4 +10,6 @@ step certificate create root.linkerd.cluster.local ca.crt ca.key \
 
 kubectl apply -f ./manifests
 
+kubectl wait -f ./manifests --for condition=available
+
 rm ca.crt ca.key

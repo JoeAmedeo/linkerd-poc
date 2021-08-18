@@ -4,5 +4,5 @@ helm upgrade --install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
-  --version v1.4.0 \
+  --version v1.5.0 \
   --set installCRDs=true
