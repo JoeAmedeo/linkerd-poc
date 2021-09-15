@@ -1,19 +1,28 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: testing
+  annotations:
+    linkerd.io/inject: enabled
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: proxy-shutdown
+  namespace: testing
+  annotations:
+    something: enabled
 spec:
   ttlSecondsAfterFinished: 100
   template:
-    metadata:
-      annotations:
-        linkerd.io/inject: enabled
     spec:
       containers:
         - name: wait-and-shutdown
-          image: curlimages/curl
-          command:
-            - "/bin/sh"
-            - "-c"
-            - "sleep 30 && curl -X POST http://localhost:4191/shutdown"
+          image: linkerd-await-test:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ANNOTATION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.annotations['linkerd.io/enabled']
       restartPolicy: Never
